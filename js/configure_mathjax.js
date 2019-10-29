@@ -7,6 +7,8 @@ window.MathJax = {
             // New Operators
             diag: "{\\mathop{\\rm diag}\\nolimits}",
             rank: "{\\mathop{\\rm rank}\\nolimits}",
+            cov: "{\\mathop{\\rm Cov}\\nolimits}",
+            E: ["\\mathbb{E}\\{#1\\}", 1],  // Expectation (takes one parameter)
             // Matrices
             mtA: "\\mathbf{A}",
             mtB: "\\mathbf{B}",

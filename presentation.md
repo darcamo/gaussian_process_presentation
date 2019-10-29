@@ -30,9 +30,78 @@ class:middle, hide-logo, hide-slide-number
 
 # .center[Agenda]
 
-![:toc 2, 20]
+
+
+This is the toc
 
 ---
+layout: true
+
+# Mathematical Backgroubd
+
+---
+
+## Joint, marginal and conditional probabilities
+
+- Joint and conditional probabilities
+
+$$p(A,B) = p(A/B)p(B) = p(B/A)p(A)$$
+
+
+.happy.labeled.box[
+.label[
+Bayes Theorem]
+$$p(A/B) = \frac{p(B/A)p(A)}{p(B)}$$
+]
+
+- Sum Rule
+
+$$p(A) = \sum_{b \in B} p(A/B)$$
+
+$$p(A) = \sum_{b \in B} p(A, B)$$
+
+---
+
+## Likelihood function
+
+- Consider the probability of \$y\$ conditioned to a vector of parameters \$\vtTheta\$
+- If we reverse the interpretation of this conditional probability and see it as
+  a function of \$\vtTheta\$ for a given fixed \$y\$ we then get the likelihood
+  function
+
+$$L(\vtTheta/y) = p(y/\vtTheta)$$
+
+![:note moody](The likelihood function is not a probability density function, but just a function of \$\vtTheta\$)
+
+
+---
+
+## Gaussian Distribution
+
+- Univariate Gaussian Distribution
+
+$$f(x) = \frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2} \left( \frac{x-\mu}{\sigma} \right)^2}$$
+
+- Multivariate Gaussian Distribution
+
+$$\mtX \sim \stN(\vtMu, \mtSigma)$$
+
+$$\vtMu = (\E{\vtX} = \E{\vtX_1}, \E{\vtX_2}, \ldots, \E{\vtX_n})$$
+
+$$\mtSigma_{ij} = \E{(\vtX_i - \vtMu_i)(\vtX_j - \vtMu_j)} = \cov(\vtX_i, \vtX_j)$$
+
+$$f_\vtX(\vtX_1, \vtX_1, \ldots, \vtX_n) = \frac{\exp \left( -\frac{1}{2}(\vtX-\vtMu)^T \mtSigma^{-1} (\vtX-\vtMu) \right)}{\sqrt{(2\pi)^k |\mtSigma|}}$$
+
+---
+
+## Bivariate Gaussian Distribution
+
+$$f(x,y) = \frac{1}{2\pi\sigma_x\sigma_y \sqrt{1-\rho^2}} \exp \left( -\frac{1}{2(1-\rho^2)} \left[ \frac{(x-\mu_x)}{\sigma_x^2} + \frac{(y-\mu_y)}{\sigma_y^2} - \frac{2\rho(x-\mu_x)(y-\mu_y)}{\sigma_x\sigma_y} \right]\right)$$
+
+where \$\rho\$ is the correlation between \$x\$ and \$y\$.
+
+---
+layout: false
 
 # This is the slide tittle
 

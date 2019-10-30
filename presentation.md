@@ -80,7 +80,7 @@ $$L(\vtTheta/y) = p(y/\vtTheta)$$
 
 - Univariate Gaussian Distribution
 
-$$f(x) = \frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{1}{2} \left( \frac{x-\mu}{\sigma} \right)^2}$$
+$$f(x) = \frac{1}{\sigma \sqrt{2 \pi}} \exp \left(-\frac{1}{2} \left( \frac{x-\mu}{\sigma} \right)^2 \right)$$
 
 - Multivariate Gaussian Distribution
 
@@ -103,23 +103,54 @@ where \$\rho\$ is the correlation between \$x\$ and \$y\$.
 ---
 layout: false
 
-# This is the slide tittle
+# Bayesian Estimation
 
-## This is a subtitle
+- In the classical statistical estimation the parameter of interest \$\theta\$
+  is assumed to be a deterministic, but unknown constant
+- In a Bayesian approach \$\theta\$ is assumed to be a random variable whose
+  realization we must estimate
+- The motivation for using a Bayesian approach is twofold
+  - We have some **prior knoledge** about \$\theta\$ that we can incorporate
+    into the estimator
+  - This requires \$\theta\$ to be a random variable with a given **prior** pdf
 
-Nam euismod tellus id erat.
+![:box moody, Motivating Example](We want to estimate \$A\$ from observations \$\vtX = A + \vtW\$, where \$\vtW\$ is a noise vector.)
 
-- Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-- Nam euismod tellus id erat.
-  - Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-  - Fusce commodo.
-     - Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-- Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-
-1. Phasellus neque orci, porta a, aliquet quis, semper a, massa.
-2. Fusce suscipit, wisi nec facilisis facilisis, est dui fermentum leo, quis tempor ligula erat quis odio.
+.columns[
+.column.w-50.align-middle[
+![:box happy, Classic Solution](\$\hat{A} = \overline{\vtX}\$)
+]
+.column.w-50.align-middle[
+![:box happy, Bayesian Solution](\$\hat{A} = \E{A|\vtX}\$)
+]]
 
 ---
+
+# Bayesian Estimation
+
+## Prior and posteriori
+
+- The **prior** PDF corresponds to our belief about which values \$A\$ can take
+  **before** anything is observed
+  - It is often assumed as a uniform distribution
+- The **posteriori*** PDF corresponds to our belief about which values \$A\$ can
+  take **after** we have observed some data
+
+
+<!-- .pull-left[![squares](figs/prior_A.svg)] -->
+
+<!-- .pull-right[![squares](figs/posterior_A.svg)] -->
+
+.columns[
+.column.w-50.align-middle[
+![:captionedfigure Prior PDF](figs/prior_A.svg)
+]
+.column.w-50.align-middle[
+![:captionedfigure Posterior PDF](figs/posterior_A.svg)
+]]
+
+---
+
 
 # A slide with Blocks
 ## Three available colors and labeled vs unlabeled blocks

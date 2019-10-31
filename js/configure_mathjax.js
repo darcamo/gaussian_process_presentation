@@ -1,6 +1,9 @@
 "use strict";
 
 window.MathJax = {
+    config: {
+        typeset: false
+    },
     tex: {
         inlineMath: [['\\$', '\\$']],
         macros: {

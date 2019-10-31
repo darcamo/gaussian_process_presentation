@@ -86,24 +86,26 @@ $$f(x) = \frac{1}{\sigma \sqrt{2 \pi}} \exp \left(-\frac{1}{2} \left( \frac{x-\m
 
 $$\mtX \sim \stN(\vtMu, \mtSigma)$$
 
-$$\vtMu = (\E{\vtX} = \E{\vtX_1}, \E{\vtX_2}, \ldots, \E{\vtX_n})$$
+$$\vtMu = (\E{\vtX} = \E{\vtX\_1}, \E{\vtX\_2}, \ldots, \E{\vtX\_n})$$
 
-$$\mtSigma_{ij} = \E{(\vtX_i - \vtMu_i)(\vtX_j - \vtMu_j)} = \cov(\vtX_i, \vtX_j)$$
+$$\mtSigma\_{ij} = \E{(\vtX\_i - \vtMu\_i)(\vtX\_j - \vtMu\_j)} = \cov(\vtX\_i, \vtX\_j)$$
 
-$$f_\vtX(\vtX_1, \vtX_1, \ldots, \vtX_n) = \frac{\exp \left( -\frac{1}{2}(\vtX-\vtMu)^T \mtSigma^{-1} (\vtX-\vtMu) \right)}{\sqrt{(2\pi)^k |\mtSigma|}}$$
+$$f\_\vtX(\vtX\_1, \vtX\_1, \ldots, \vtX\_n) = \frac{\exp \left( -\frac{1}{2}(\vtX-\vtMu)^T \mtSigma^{-1} (\vtX-\vtMu) \right)}{\sqrt{(2\pi)^k |\mtSigma|}}$$
 
 ---
 
 ## Bivariate Gaussian Distribution
 
-$$f(x,y) = \frac{1}{2\pi\sigma_x\sigma_y \sqrt{1-\rho^2}} \exp \left( -\frac{1}{2(1-\rho^2)} \left[ \frac{(x-\mu_x)}{\sigma_x^2} + \frac{(y-\mu_y)}{\sigma_y^2} - \frac{2\rho(x-\mu_x)(y-\mu_y)}{\sigma_x\sigma_y} \right]\right)$$
+$$f(x,y) = \frac{1}{2\pi\sigma\_x\sigma\_y \sqrt{1-\rho^2}} \exp \left( -\frac{1}{2(1-\rho^2)} \left[ \frac{(x-\mu\_x)}{\sigma\_x^2} + \frac{(y-\mu\_y)}{\sigma\_y^2} - \frac{2\rho(x-\mu\_x)(y-\mu\_y)}{\sigma\_x\sigma\_y} \right]\right)$$
 
 where \$\rho\$ is the correlation between \$x\$ and \$y\$.
 
 ---
-layout: false
+layout: true
 
-# Bayesian Estimation
+# Bayesian Approach
+
+---
 
 - In the classical statistical estimation the parameter of interest \$\theta\$
   is assumed to be a deterministic, but unknown constant
@@ -114,7 +116,8 @@ layout: false
     into the estimator
   - This requires \$\theta\$ to be a random variable with a given **prior** pdf
 
-![:box moody, Motivating Example](We want to estimate \$A\$ from observations \$\vtX = A + \vtW\$, where \$\vtW\$ is a noise vector.)
+![:box moody, Motivating Example](We want to estimate a DC current \$A\$ from
+noisy observations \$\vtX = \vtOne A + \vtW\$, where \$\vtW\$ is a noise vector.)
 
 .columns[
 .column.w-50.align-middle[
@@ -126,20 +129,14 @@ layout: false
 
 ---
 
-# Bayesian Estimation
-
-## Prior and posteriori
+## Prior and posterior
 
 - The **prior** PDF corresponds to our belief about which values \$A\$ can take
   **before** anything is observed
   - It is often assumed as a uniform distribution
-- The **posteriori*** PDF corresponds to our belief about which values \$A\$ can
+- The **posterior** PDF corresponds to our belief about which values \$A\$ can
   take **after** we have observed some data
 
-
-<!-- .pull-left[![squares](figs/prior_A.svg)] -->
-
-<!-- .pull-right[![squares](figs/posterior_A.svg)] -->
 
 .columns[
 .column.w-50.align-middle[
@@ -151,6 +148,79 @@ layout: false
 
 ---
 
+## Gaussian PDFs
+
+- Using the Bayes theorem we can write the posterior PDF as
+
+$$p(\vtTheta|x) = \frac{p(x|\vtTheta)p(\vtTheta)}{p(x)} = \frac{p(x|\vtTheta)p(\vtTheta)}{\int p(x|\vtTheta)p(\vtTheta)  d\vtTheta}$$
+
+- This requires a \$p\$ dimensional integration over theta
+- The mean still needs to be evaluated requiring another integration over \$\vtTheta\$
+
+.happy.labeled.box[.label[
+Assumption]
+The prior PDFs are Gaussian
+]
+
+- Everything becomes much easier and we can solve the integral
+- The posterior also becomes Gaussian
+
+![:note moody](See Kay book, chapter 10, for the proper deriations)
+
+.footnote[Steven M. Kay, *Fundamentals of Statistical Processing: Estimation Theory*]
+
+---
+
+layout: false
+
+# Bayesian Estimator
+
+- With the priors and posterior being Gaussian distributions, theorem 10.2 in
+  Kay book give us the expectation and covariance of the posterior as
+
+$$\E{\vtY|\vtX} = \E{\vtY} + \mtC\_{yx}\mtC\_{xx}^{-1}(\vtX - \E{\vtX})$$
+
+$$\mtC\_{\vtY|\vtX} = \mtC\_{yy} - \mtC\_{yx}\mtC\_{xx}^{-1}\mtC\_{xy}$$
+
+<!-- - Notice how our estimation is a weighted average of the input -->
+
+.extra-top-bottom-margin[
+![:note moody](The covariance matrix of the conditional PDF does not depend on \$\vtX\$)
+]
+
+.extra-top-bottom-margin[
+![:note happy](Theorem 10.2 is valid when \$\vtX\$ and \$\vtY\$ are jointly Gaussian)
+]
+
+.footnote[Steven M. Kay, *Fundamentals of Statistical Processing: Estimation Theory*]
+
+---
+
+# Bayesian Linear Model
+
+- A data model corresponds to how we model the dependency of the input and output
+- It should be complex enough to describe the principal features of the data,
+  but simple enough to allow an estimation that is optimal (in the MSE sense)
+  and easily implemented
+
+- The Bayesian equivalent of a linear model is defined as
+
+$$\vtX = \mtH \vtTheta + \vtW$$
+
+where \$\vtX\$ is a \$N \times 1\$ data, \$\mtH\$ is a known \$N \times p\$ matrix and \$\vtTheta\$ is a \$p \times 1\$ random vector with prior PDF \$\stN(\vtMu\_\vtTheta, \mtC\_\vtTheta)\$, and \$\vtW\$ is an \$N \times 1\$ noisy vector with PDF \$\stN(\vtZero, \mtC\_W)\$ and independent of \$\vtTheta\$
+
+
+
+.happy.labeled.box[.label[
+Bayesian Estimator]
+Theorem 10.3 in Kay book states that for this data model and prior Gaussian PDFs the posterior PDF \$p(\vtTheta | \vtX)\$ is Gaussian with mean and covariance given by
+$$\E{\vtTheta|\vtX} = \vtMu\_\vtTheta + \mtC\_\vtTheta \mtH^T(\mtH \mtC\_\vtTheta \mtH^T + \mtC\_\vtW)^{-1}(\vtX - \mtH \vtMu\_\vtTheta)$$
+$$\mtC\_{\vtTheta|\vtX} = \mtC\_\vtTheta - \mtC\_\vtTheta \mtH^T(\mtH\mtC\_\vtTheta \mtH^T + \mtC\_\vtW)^{-1} \mtH \mtC\_\vtTheta$$
+]
+
+---
+
+layout: false
 
 # A slide with Blocks
 ## Three available colors and labeled vs unlabeled blocks
@@ -199,6 +269,8 @@ Oops, the equation above is .strike[wrong] imprecise. The correct equation is
 
 $$\vtY = \mtH\vtX+\vtZ$$
 
+![:note angry](You need to escape underlines in equations as `\_` such that they
+are not interpret by the markdown parser)
 
 .footnote[The math is typeset using [MathJax](https://www.mathjax.org/)]
 
@@ -587,6 +659,11 @@ Some other elements with css are:
 
 - You can get nice general pictures from specialized sites such as https://unsplash.com/
   - Better than just googling
+
+---
+# References
+
+<div id="bibtex_display"></div>
 
 ---
 class: middle, center, hide-slide-number, hide-logo

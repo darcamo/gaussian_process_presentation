@@ -51,6 +51,7 @@ $$p(A,B) = p(A/B)p(B) = p(B/A)p(A)$$
 .happy.labeled.box[
 .label[
 Bayes Theorem]
+
 $$p(A/B) = \frac{p(B/A)p(A)}{p(B)}$$
 ]
 
@@ -94,7 +95,16 @@ $$f\_\vtX(\vtX\_1, \vtX\_1, \ldots, \vtX\_n) = \frac{\exp \left( -\frac{1}{2}(\v
 
 ---
 
-## Bivariate Gaussian Distribution
+## Gaussian Distribution
+
+.extra-top-bottom-margin.moody.labeled.box[.label[
+Properties of Multivariate (MV) gaussian]
+- Sum of gaussian is gaussian
+- Marginal of gaussian is gaussian
+- Conditioning a Gaussian also results in a gaussian
+]
+
+- Bivariate Gaussian Distribution
 
 $$f(x,y) = \frac{1}{2\pi\sigma\_x\sigma\_y \sqrt{1-\rho^2}} \exp \left( -\frac{1}{2(1-\rho^2)} \left[ \frac{(x-\mu\_x)}{\sigma\_x^2} + \frac{(y-\mu\_y)}{\sigma\_y^2} - \frac{2\rho(x-\mu\_x)(y-\mu\_y)}{\sigma\_x\sigma\_y} \right]\right)$$
 
@@ -159,6 +169,7 @@ $$p(\vtTheta|x) = \frac{p(x|\vtTheta)p(\vtTheta)}{p(x)} = \frac{p(x|\vtTheta)p(\
 
 .happy.labeled.box[.label[
 Assumption]
+
 The prior PDFs are Gaussian
 ]
 
@@ -166,6 +177,8 @@ The prior PDFs are Gaussian
 - The posterior also becomes Gaussian
 
 ![:note moody](See Kay book, chapter 10, for the proper deriations)
+
+
 
 .footnote[Steven M. Kay, *Fundamentals of Statistical Processing: Estimation Theory*]
 
@@ -202,12 +215,9 @@ $$\mtC\_{\vtY|\vtX} = \mtC\_{yy} - \mtC\_{yx}\mtC\_{xx}^{-1}\mtC\_{xy}$$
 - It should be complex enough to describe the principal features of the data,
   but simple enough to allow an estimation that is optimal (in the MSE sense)
   and easily implemented
-
 - The Bayesian equivalent of a linear model is defined as
-
-$$\vtX = \mtH \vtTheta + \vtW$$
-
-where \$\vtX\$ is a \$N \times 1\$ data, \$\mtH\$ is a known \$N \times p\$ matrix and \$\vtTheta\$ is a \$p \times 1\$ random vector with prior PDF \$\stN(\vtMu\_\vtTheta, \mtC\_\vtTheta)\$, and \$\vtW\$ is an \$N \times 1\$ noisy vector with PDF \$\stN(\vtZero, \mtC\_W)\$ and independent of \$\vtTheta\$
+  $$\vtX = \mtH \vtTheta + \vtW$$
+  where \$\vtX\$ is a \$N \times 1\$ data, \$\mtH\$ is a known \$N \times p\$ matrix and \$\vtTheta\$ is a \$p \times 1\$ random vector with prior PDF \$\stN(\vtMu\_\vtTheta, \mtC\_\vtTheta)\$, and \$\vtW\$ is an \$N \times 1\$ noisy vector with PDF \$\stN(\vtZero, \mtC\_W)\$ and independent of \$\vtTheta\$
 
 
 
@@ -217,6 +227,42 @@ Theorem 10.3 in Kay book states that for this data model and prior Gaussian PDFs
 $$\E{\vtTheta|\vtX} = \vtMu\_\vtTheta + \mtC\_\vtTheta \mtH^T(\mtH \mtC\_\vtTheta \mtH^T + \mtC\_\vtW)^{-1}(\vtX - \mtH \vtMu\_\vtTheta)$$
 $$\mtC\_{\vtTheta|\vtX} = \mtC\_\vtTheta - \mtC\_\vtTheta \mtH^T(\mtH\mtC\_\vtTheta \mtH^T + \mtC\_\vtW)^{-1} \mtH \mtC\_\vtTheta$$
 ]
+
+---
+# Gaussian Process
+
+- While probability distributions describe random variables, a stochastic
+  process describes the properties of **functions**
+  - They can be interpreted as distribution over functions
+
+.moody.labeled.box[.label[
+Note]
+
+We can loosely think of a function as a long vector, each entry specifying
+    \$f(x)\$ at a particular input \$x\$]
+
+- A Gaussian Process (GP) is a generalization of the Gaussian probability
+  distribution
+
+.extra-top-bottom-margin.happy.labeled.box[.label[
+Definition]
+
+Gaussian processes are distributions over functions \$f(x)\$ of which the
+distribution is defined by a mean function \$m(x)\$ and positive definite
+covariance function \$k(x,x')\$
+]
+
+
+
+
+
+
+---
+
+# Gaussian Process
+
+- Gaussian Processes have Bayesian priors
+![:note moody](The usual assumption is that the function is always zero with covariance one, **until we see training data showing otherwise**)
 
 ---
 

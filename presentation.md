@@ -1,5 +1,13 @@
 
 
+name: inverse
+layout: true
+class: center, middle, inverse
+
+---
+
+layout: false
+
 class: center, middle, hide-slide-number, hide-logo
 background-image: url(figs/circles.svg)
 background-size: cover
@@ -118,15 +126,15 @@ layout: true
 ---
 
 - In the classical statistical estimation the parameter of interest \$\theta\$
-  is assumed to be a deterministic, but unknown constant
-- In a Bayesian approach \$\theta\$ is assumed to be a random variable whose
+  is assumed to be a **deterministic, but unknown constant**
+- In a Bayesian approach \$\theta\$ is assumed to be a **random variable** whose
   realization we must estimate
 - The motivation for using a Bayesian approach is twofold
   - We have some **prior knoledge** about \$\theta\$ that we can incorporate
     into the estimator
   - This requires \$\theta\$ to be a random variable with a given **prior** pdf
 
-![:box moody, Motivating Example](We want to estimate a DC current \$A\$ from
+![:box moody, Motivating Example: Estimate a DC current](We want to estimate a DC current \$A\$ from
 noisy observations \$\vtX = \vtOne A + \vtW\$, where \$\vtW\$ is a noise vector.)
 
 .columns[
@@ -167,10 +175,15 @@ $$p(\vtTheta|x) = \frac{p(x|\vtTheta)p(\vtTheta)}{p(x)} = \frac{p(x|\vtTheta)p(\
 - This requires a \$p\$ dimensional integration over theta
 - The mean still needs to be evaluated requiring another integration over \$\vtTheta\$
 
+
 .happy.labeled.box[.label[
 Assumption]
 
-The prior PDFs are Gaussian
+The integral with this uniform PDF is complicated to compute.
+
+Let's assume the prior PDFs are Gaussian instead!
+
+We can use \$\mu\_A = 0\$ and \$3\sigma\_A = A\_0\$ to incorporate our knowledge that \$A \leq A\_0\$
 ]
 
 - Everything becomes much easier and we can solve the integral
@@ -202,22 +215,27 @@ $$\mtC\_{\vtY|\vtX} = \mtC\_{yy} - \mtC\_{yx}\mtC\_{xx}^{-1}\mtC\_{xy}$$
 ]
 
 .extra-top-bottom-margin[
-![:note happy](Theorem 10.2 is valid when \$\vtX\$ and \$\vtY\$ are jointly Gaussian)
+![:note happy](Theorem 10.2 is valid when \$\vtX\$ and \$\vtY\$ are jointly Gaussian, but in which cases that is true?)
 ]
 
 .footnote[Steven M. Kay, *Fundamentals of Statistical Processing: Estimation Theory*]
 
 ---
+template: inverse
+
+# The Bayesian Linear Model
+
+---
 
 # Bayesian Linear Model
 
-- A data model corresponds to how we model the dependency of the input and output
+- A data model corresponds to how we model **the dependency of the input and output**
 - It should be complex enough to describe the principal features of the data,
   but simple enough to allow an estimation that is optimal (in the MSE sense)
   and easily implemented
 - The Bayesian equivalent of a linear model is defined as
   $$\vtX = \mtH \vtTheta + \vtW$$
-  where \$\vtX\$ is a \$N \times 1\$ data, \$\mtH\$ is a known \$N \times p\$ matrix and \$\vtTheta\$ is a \$p \times 1\$ random vector with prior PDF \$\stN(\vtMu\_\vtTheta, \mtC\_\vtTheta)\$, and \$\vtW\$ is an \$N \times 1\$ noisy vector with PDF \$\stN(\vtZero, \mtC\_W)\$ and independent of \$\vtTheta\$
+  where \$\vtX\$ is a \$N \times 1\$ data, \$\mtH\$ is a known \$N \times p\$ matrix and \$\vtTheta\$ is a \$p \times 1\$ random vector of parameters with prior PDF \$\stN(\vtMu\_\vtTheta, \mtC\_\vtTheta)\$, and \$\vtW\$ is an \$N \times 1\$ noisy vector with PDF \$\stN(\vtZero, \mtC\_W)\$ and independent of \$\vtTheta\$
 
 
 
@@ -229,6 +247,102 @@ $$\mtC\_{\vtTheta|\vtX} = \mtC\_\vtTheta - \mtC\_\vtTheta \mtH^T(\mtH\mtC\_\vtTh
 ]
 
 ---
+
+# Bayesian Linear Model
+
+.moody.labeled.box[.label[
+Motivating Example: Estimate a DC current]
+With theorem 10.3 in Kay book we can get the estimation of the DC current in our motivating example as
+
+$$\hat{A} = \E{A|\vtX} = \mu\_A + \sigma\_A^2 \vtOne^T (\vtOne \sigma\_A^2 \vtOne^T + \sigma^2\mtI)^{-1}(\vtX - \vtOne \mu\_A)$$
+]
+
+
+This can also be rewritten as 
+
+$$\E{A|\vtX} = \mu\_A + \frac{\sigma\_A^2}{\sigma\_A^2 + \frac{\sigma^2}{N}}(\overline{x} - \mu\_A)$$
+
+.angry.labeled.box[.label[
+  Takeaway]
+  The estimation with no data, \$\hat{A} = \mu\_A\$ (the prior), is corrected by the error between the data estimator \$\overline{x}\$ and the "previous" estimate \$\mu\_A\$
+]
+
+---
+
+template:inverse
+
+# Gaussian Process
+
+---
+layout: true
+# Gaussian Process
+## Standard linear model
+---
+
+- Gaussian processes can be seen as an extension to the **Bayesian linear model** we have seen
+- Consider the standard linear regression model
+
+$$f(\vtX) = \vtX^T \vtW, \qquad y = f(x) + \epsilon$$
+where \$\vtX\$ is the input vector, \$\vtW\$ is a vector of weights (parameters) of the linear model, \$f\$ is the function value, and \$y\$ is the observation
+- The observed value \$y\$ differ from the function values \$f(\vtX)\$ by additive noise that follows an independent and identically distributed Gaussian distribution
+
+$$\epsilon \sim \stN(0, \sigma\_n^2)$$
+
+![:note moody](The bias can be included by augmenting \$\vtX\$ with an additional element whose value is always one.)
+
+
+---
+
+- In a Bayesian formalism we need to specify a prior over the parameters. We put a zero mean Gaussian prior with covariance matrix \$\Sigma\_p\$ on the weights
+
+$$\vtW \sim \stN(\vtZero, \Sigma\_p)$$
+
+- The noise assumption toguether with the model gives rise to the *likelihood* \$p(y|X, \vtW)\$
+- Inference is based on the posterior distribution over the weights
+
+$$\text{posterior} = \frac{\text{likelihood} \times \text{prior}}{\text{marginal likelihood}} = \frac{p(\vtW|X, \vtY)
+p(\vtW)}{p(\vtY|X)}$$
+
+---
+
+- The posterior combines the likelihood and the prior and captures everything we known about the parameters
+
+$$p(\vtW|X, \vtY) = \stN(\frac{1}{\sigma\_n^{2}}A^{-1}X\vtY, A^{-1}) \quad \text{with} \quad A=\sigma\_n^{-2}XX^T + \sigma\_p^{-1}$$
+
+- To make predictions for a test case we average over all possible parameter values, weighted by their posterior probability
+
+$$p(f\_\*|\vtX\_\*, X, \vtY) = \int p(f\_\*|\vtX\_\*, \vtW) p(\vtW|X,\vtY)d\vtW$$
+$$p(f\_\*|\vtX\_\*, X, \vtY) = \stN(\frac{1}{\sigma\_n^2}\vtX\_\*^T A^{-1} X \vtY,    \vtX\_\*^T A^{-1}\vtX\_\*)$$
+
+---
+
+layout:true
+
+# Gaussian Process
+## Projection of inputs into feature space
+
+---
+
+- The linear model suffer from limited expressiveness
+- To overcome this problem we first project the inputs into some high dimensional space using a set of basis functions and then apply the linear model there
+- As long as the projections are fixed functions that do not depend on \$\vtW\$ the model is still linear in the parameters
+- We introduce the function \$\phi(\vtX)\$ which maps a \$D\$-dimensional input vector into a \$N\$-dimensional feature space
+- Now the model is
+
+$$f(\vtX) = \phi(\vtX)^T \vtW$$
+
+Thus the predictive distribution becomes 
+
+$$p(f\_\*|\vtX\_\*, X, \vtY) = \stN(\frac{1}{\sigma\_n^2}\phi(\vtX\_\*)^T A^{-1} \Phi \vtY,    \phi(\vtX\_\*)^T A^{-1}\phi(\vtX\_\*))$$
+
+where \$\Phi\$ is the aggregation of columns of \$\phi(\vtX)\$ for all cases in the trainning set
+
+<span style="color:red;">TODO</span>
+
+---
+
+layout: false
+
 # Gaussian Process
 
 - While probability distributions describe random variables, a stochastic
@@ -262,7 +376,8 @@ covariance function \$k(x,x')\$
 # Gaussian Process
 
 - Gaussian Processes have Bayesian priors
-![:note moody](The usual assumption is that the function is always zero with covariance one, **until we see training data showing otherwise**)
+  - The usual assumption is that the function is always zero with covariance one,
+    **until we see training data showing otherwise**
 
 ---
 

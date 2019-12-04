@@ -324,20 +324,73 @@ layout:true
 ---
 
 - The linear model suffer from limited expressiveness
-- To overcome this problem we first project the inputs into some high dimensional space using a set of basis functions and then apply the linear model there
-- As long as the projections are fixed functions that do not depend on \$\vtW\$ the model is still linear in the parameters
-- We introduce the function \$\phi(\vtX)\$ which maps a \$D\$-dimensional input vector into a \$N\$-dimensional feature space
-- Now the model is
+- **Solution**: project the inputs into some high dimensional space using a set of basis functions and then apply the linear model there
+<!-- - If the projections do not depend on \$\vtW\$ the model is still linear in the parameters -->
 
+.moody.labeled.box[.label[
+  Model
+]
 $$f(\vtX) = \phi(\vtX)^T \vtW$$
 
-Thus the predictive distribution becomes 
+where \$\phi(\vtX)\$ maps a \$D\$-dimensional input vector into a \$N\$-dimensional feature space
+]
 
+.happy.labeled.box[.label[
+Predictive distribution
+]
 $$p(f\_\*|\vtX\_\*, X, \vtY) = \stN(\frac{1}{\sigma\_n^2}\phi(\vtX\_\*)^T A^{-1} \Phi \vtY,    \phi(\vtX\_\*)^T A^{-1}\phi(\vtX\_\*))$$
 
-where \$\Phi\$ is the aggregation of columns of \$\phi(\vtX)\$ for all cases in the trainning set
+where \$\Phi\$ is the aggregation of columns of \$\phi(\vtX)\$ for all cases in the trainning set and \$A = \sigma\_n^{-2}\Phi \Phi^T + \Sigma\_p^{-1}\$ 
+]
 
-<span style="color:red;">TODO</span>
+
+
+---
+
+.happy.labeled.box[.label[
+Predictive distribution
+]
+$$p(f\_\*|\vtX\_\*, X, \vtY) = \stN(\frac{1}{\sigma\_n^2}\phi(\vtX\_\*)^T A^{-1} \Phi \vtY,    \phi(\vtX\_\*)^T A^{-1}\phi(\vtX\_\*))$$
+]
+
+- To make predictions with this equation we need to invert \$A\$ of size \$N \times N\$, which might not be convenient if \$N\$, the dimension of the feature space, is large
+- We can rewrite the equation as 
+
+$$p(f\_\*|\vtX\_\*, X, \vtY) = \stN(
+  \textcolor{red}{\phi\_\*^T \Sigma\_p \Phi} (\textcolor{blue}{\Phi^T \Sigma\_p \Phi} + \sigma\_n^2\mtI)^{-1} \vtY, 
+\textcolor{green}{\phi\_\*^T \Sigma\_p \phi\_\*} - \textcolor{red}{\phi\_\*^T\Sigma\_p\Phi}(\textcolor{blue}{\Phi^T \Sigma\_p \Phi} + \sigma\_n^2\mtI)^{-1} \textcolor{red}{\Phi^T \Sigma\_p \phi\_\*})$$
+
+where the notation \$\phi(\vtX\_\*) = \phi\_\*\$ was used
+
+- The feature space always appears in the form inner products \$\phi(\vtX)\Sigma\_p\phi(\vtX^\prime)\$, where \$\vtX\$ and \$\vtX^\prime\$ are either the training of the test sets
+
+<!-- - Notice the feature space always appears in inner products
+  - between \$\textcolor{red}{\text{test and training samples}}\$
+  - between \$\textcolor{blue}{\text{training samples}}\$
+  - between \$\textcolor{green}{\text{test samples}}\$ -->
+---
+
+- We can define \$k(\vtX, \vtX^\prime) = \phi(\vtX)\Sigma\_p\phi(\vtX^\prime)\$ as a *kernel* or *covariance function*
+
+.moody.labeled.box[.label[
+The Kernel Trick]
+If an algorithm is defined soly in terms of inner products in input space then it can be lifted into feature space by replacing the inner products with by \$k (\vtX, \vtX^\prime\$)
+]
+
+- The kernel then becomes the object of primary interest, and the feature space is of secundary importance
+
+<!-- $$p(f\_\*|\vtX\_\*, X, \vtY) = \stN(
+  \textcolor{red}{\phi\_\*^T \Sigma\_p \Phi} (\textcolor{blue}{\Phi^T \Sigma\_p \Phi} + \sigma\_n^2\mtI)^{-1} \vtY, 
+\textcolor{green}{\phi\_\*^T \Sigma\_p \phi\_\*} - \textcolor{red}{\phi\_\*^T\Sigma\_p\Phi}(\textcolor{blue}{\Phi^T \Sigma\_p \Phi} + \sigma\_n^2\mtI)^{-1} \textcolor{red}{\Phi^T \Sigma\_p \phi\_\*})$$ -->
+
+
+.happy.labeled.box[.label[
+Predictive distribution
+]
+$$p(\vtF\_\*|X\_\*, X, \vtY) = \stN(
+  K(X\_\*, X) (K(X, X) + \sigma\_n^2\mtI)^{-1} \vtY, 
+K(X\_\*, X\_\*) - K(X\_\*, X)(K(X, X) + \sigma\_n^2\mtI)^{-1} K(X, X\_\*))$$
+]
 
 ---
 
@@ -643,11 +696,11 @@ zero and lower than one in order for the overlay to work)
 
 .auto-left-right-margin.extra-top-bottom-margin[
 
-| Some text         | Some text              | Some text      |   Some text       |
-| :---------------: | :--------------------: | :------------: | :---------------: |
-| some text some    | some text              | some text      | some text         |
-| some text         | some text some text    | text           | text              |
-| some text some    | text                   | some text      | text              |
+|   Some text    |      Some text      | Some text | Some text |
+| :------------: | :-----------------: | :-------: | :-------: |
+| some text some |      some text      | some text | some text |
+|   some text    | some text some text |   text    |   text    |
+| some text some |        text         | some text |   text    |
 ]
 
 

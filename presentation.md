@@ -347,11 +347,11 @@ where \$\Phi\$ is the aggregation of columns of \$\phi(\vtX)\$ for all cases in 
 
 ---
 
-.happy.labeled.box[.label[
+<!-- .happy.labeled.box[.label[
 Predictive distribution
 ]
 $$p(f\_\*|\vtX\_\*, X, \vtY) = \stN(\frac{1}{\sigma\_n^2}\phi(\vtX\_\*)^T A^{-1} \Phi \vtY,    \phi(\vtX\_\*)^T A^{-1}\phi(\vtX\_\*))$$
-]
+] -->
 
 - To make predictions with this equation we need to invert \$A\$ of size \$N \times N\$, which might not be convenient if \$N\$, the dimension of the feature space, is large
 - We can rewrite the equation as 
@@ -363,14 +363,13 @@ $$p(f\_\*|\vtX\_\*, X, \vtY) = \stN(
 where the notation \$\phi(\vtX\_\*) = \phi\_\*\$ was used
 
 - The feature space always appears in the form inner products \$\phi(\vtX)\Sigma\_p\phi(\vtX^\prime)\$, where \$\vtX\$ and \$\vtX^\prime\$ are either the training of the test sets
-
-<!-- - Notice the feature space always appears in inner products
+- The different colors in the above equation the three possible cases
   - between \$\textcolor{red}{\text{test and training samples}}\$
   - between \$\textcolor{blue}{\text{training samples}}\$
-  - between \$\textcolor{green}{\text{test samples}}\$ -->
+  - between \$\textcolor{green}{\text{test samples}}\$
 ---
 
-- We can define \$k(\vtX, \vtX^\prime) = \phi(\vtX)\Sigma\_p\phi(\vtX^\prime)\$ as a *kernel* or *covariance function*
+- We can define \$k(\vtX, \vtX^\prime) = \phi(\vtX)\Sigma\_p\phi(\vtX^\prime)\$ as a *kernel*, or *covariance function*
 
 .moody.labeled.box[.label[
 The Kernel Trick]
@@ -389,8 +388,24 @@ Predictive distribution
 ]
 $$p(\vtF\_\*|X\_\*, X, \vtY) = \stN(
   K(X\_\*, X) (K(X, X) + \sigma\_n^2\mtI)^{-1} \vtY, 
-K(X\_\*, X\_\*) - K(X\_\*, X)(K(X, X) + \sigma\_n^2\mtI)^{-1} K(X, X\_\*))$$
+K(X\_\*, X\_\*) - K(X\_\*, X)[K(X, X) + \sigma\_n^2\mtI]^{-1} K(X, X\_\*))$$
 ]
+
+.moody.labeled.box[.label[
+  Note
+]
+For any set of basis functions, we can compute the corresponding
+covariance function as \$k(x\_p, x\_q) = \phi(x\_p)^T \Sigma\_p \phi(x\_q)\$; conversely, for every (positive definite) covariance function \$k\$, there exists a (possibly infinite) expansion in terms of basis functions
+]
+
+---
+
+layout: false
+
+# Gaussian Process
+## Interpretation
+
+See page 17 in the GPML book.
 
 ---
 
